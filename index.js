@@ -29,34 +29,33 @@ customElements.define("shopping-cart", ShoppingCart);
 
 class ProductCatalog extends HTMLElement {
     async connectedCallback() {
+        this.catalog = await this.fetchCatalog();
         this.render();
     }
 
-    async render() {
+    async fetchCatalog() {
         let catalog = [];
-
         try {
             const response = await fetch("catalog.json");
             if (!response.ok) {
                 throw new Error(`Response status: ${response.status}`);
             }
-
             catalog = (JSON.parse((await response.text())))["catalog"];
         } catch (error) {
             console.error(error.message);
         }
-
+        return catalog;
+    }
+    
+    async render() {
         let products = "";
-
-        for (let product of catalog) {
+        for (let product of this.catalog) {
             products +=
                 `<product-details id="product-${product.id}" name="${product.name}" price="${product.price}"></product-details>`;
         }
-
         this.innerHTML =
             `<h2>Catalog</h2>
              <div class="products">${products}</div>`;
-
     }
 }
 

@@ -1,12 +1,13 @@
-class CartState {
+class ShoppingCart extends HTMLElement {
     static priceFormat = new Intl.NumberFormat("en-US", {
         style: "currency",
         currency: "USD",
     });
 
-    constructor() {
+    connectedCallback() {
         this.itemsCount = 0;
         this.totalAmount = 0;
+        this.render();
     }
 
     addItemToCart(price) {
@@ -16,14 +17,14 @@ class CartState {
     }
 
     render() {
-        document.getElementById("cart").innerHTML =
-            `${this.itemsCount} item(s) for a total amount of ${CartState.priceFormat.format(this.totalAmount)}.`;
+        this.innerHTML =
+            `${this.itemsCount} item(s) for a total amount of ${ShoppingCart.priceFormat.format(this.totalAmount)}.`;
     }
 }
 
+customElements.define("shopping-cart", ShoppingCart);
 
 window.addEventListener("load", async () => {
-    let cartState = new CartState();
     let catalog = [];
 
     try {
@@ -41,15 +42,16 @@ window.addEventListener("load", async () => {
         document.getElementById("catalog").innerHTML +=
             `<div class="product" id="product-${product.id}" name="${product.name}" price="${product.price}">
                 <div class="name">${product.name}</div>
-                <div class="price">${CartState.priceFormat.format(product.price)}</div>
+                <div class="price">${ShoppingCart.priceFormat.format(product.price)}</div>
                 <div class="button" id="button-${product.id}">Add to cart</div>
             </div>`;
     }
 
+    let shoppingCart = document.querySelector("shopping-cart");
+
     document.querySelectorAll(".product .button").forEach(button => {
         button.addEventListener("click", () => {
-            cartState.addItemToCart(parseFloat(button.parentElement.getAttribute("price")));
+            shoppingCart.addItemToCart(parseFloat(button.parentElement.getAttribute("price")));
         });
     });
-    cartState.render();
 });

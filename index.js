@@ -7,25 +7,63 @@ class ShoppingCart extends HTMLElement {
     connectedCallback() {
         this.itemsCount = 0;
         this.totalAmount = 0;
+        this.cartLines = {}
         this.render();
     }
 
-    addItemToCart(price) {
-        this.totalAmount += price;
+    addItemToCart(product) {
+        this.totalAmount += product.price;
         this.itemsCount++;
+        this.cartLines[product.productId] =
+            (this.cartLines[product.productId]
+                ? { product: product, quantity: this.cartLines[product.productId].quantity + 1, totalAmount: this.cartLines[product.productId].totalAmount + product.price }
+                : { product: product, quantity: 1, totalAmount: product.price });
         this.render();
     }
 
     render() {
+        let cartLines = "";
+        for (let productId in this.cartLines) {
+            let cartLine = this.cartLines[productId];
+            let product = cartLine.product;
+            cartLines +=
+                `<cart-line product-name="${product.name}" product-price="${product.price}" quantity="${cartLine.quantity}" total-amount="${cartLine.totalAmount}"></cart-line>`;
+        }
+
         this.innerHTML =
             `<h2>Shopping Cart</h2>
              <div class="cart">
-             ${this.itemsCount} item(s) for a total amount of ${ShoppingCart.priceFormat.format(this.totalAmount)}.
+             ${cartLines}`+(cartLines ? `<hr>` : "")+`
+             <div>${this.itemsCount} item(s) for a total amount of ${ShoppingCart.priceFormat.format(this.totalAmount)}.</div>
              </div>`;
     }
 }
 
 customElements.define("shopping-cart", ShoppingCart);
+
+class CartLine extends HTMLElement {
+    connectedCallback() {
+        this.product = {
+            name: this.getAttribute("product-name"),
+            price: Number(this.getAttribute("product-price"))
+        }
+        this.quantity = Number(this.getAttribute("quantity"))
+        this.totalAmount = Number(this.getAttribute("total-amount"))
+        this.render();
+    }
+
+    render() {
+        this.innerHTML =
+            `<div class="cart-line">
+                <span class="totalQuantity">${this.quantity}</span>
+                <span class="name">${this.product.name}(s)</span> at 
+                <span class="price">${ShoppingCart.priceFormat.format(this.product.price)}</span> for a total amount of
+                <span class="totalAmount">${ShoppingCart.priceFormat.format(this.totalAmount)}</span>
+            </div>`;
+    }
+}
+
+customElements.define("cart-line", CartLine);
 
 class ProductCatalog extends HTMLElement {
     async connectedCallback() {
@@ -46,12 +84,12 @@ class ProductCatalog extends HTMLElement {
         }
         return catalog;
     }
-    
+
     async render() {
         let products = "";
         for (let product of this.catalog) {
             products +=
-                `<product-details id="product-${product.id}" name="${product.name}" price="${product.price}"></product-details>`;
+                `<product-details product-id="${product.id}" name="${product.name}" price="${product.price}"></product-details>`;
         }
         this.innerHTML =
             `<h2>Catalog</h2>
@@ -82,7 +120,7 @@ class ProductDetails extends HTMLElement {
     registerHandlers() {
         const button = this.querySelector(".button");
         button.addEventListener("click", () => {
-            this.dispatchEvent(new CustomEvent("addItemToCart", { detail: { price: this.price } }));
+            this.dispatchEvent(new CustomEvent("addItemToCart", { detail: this }));
         });
     }
 }
@@ -95,7 +133,7 @@ window.addEventListener("load", async () => {
 
     document.querySelectorAll("product-details").forEach(button => {
         button.addEventListener("addItemToCart", (event) => {
-            shoppingCart.addItemToCart(parseFloat(event.detail.price));
+            shoppingCart.addItemToCart(event.detail);
         });
     });
 });

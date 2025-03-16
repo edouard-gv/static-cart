@@ -59,7 +59,7 @@ class ProductDetails extends HTMLElement {
     registerHandlers() {
         const button = this.querySelector(".button");
         button.addEventListener("click", () => {
-            this.dispatchEvent(new CustomEvent("addItemToCart", { detail: this }));
+            document.dispatchEvent(new CustomEvent("addItemToCart", { detail: this }));
         });
     }
 }

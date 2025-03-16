@@ -5,9 +5,7 @@ window.addEventListener("load", async () => {
 
     let shoppingCart = document.querySelector("shopping-cart");
 
-    document.querySelectorAll("product-details").forEach(button => {
-        button.addEventListener("addItemToCart", (event) => {
-            shoppingCart.addItemToCart(event.detail);
-        });
+    document.addEventListener("addItemToCart", (event) => {
+        shoppingCart.addItemToCart(event.detail);
     });
 });

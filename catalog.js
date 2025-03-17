@@ -3,11 +3,7 @@ export let priceFormat = new Intl.NumberFormat("en-US", {
     currency: "USD",
 });
 
-class ProductCatalog extends HTMLElement {
-    async connectedCallback() {
-        this.catalog = await this.fetchCatalog();
-        this.render();
-    }
+export class ProductCatalog {
 
     async fetchCatalog() {
         let catalog = [];
@@ -24,44 +20,28 @@ class ProductCatalog extends HTMLElement {
     }
 
     async render() {
+        this.catalog = await this.fetchCatalog();
         let products = "";
         for (let product of this.catalog) {
             products +=
-                `<product-details product-id="${product.id}" name="${product.name}" price="${product.price}"></product-details>`;
+                `<div class="product">
+                    <div class="name">${product.name}</div>
+                    <div class="price">${priceFormat.format(product.price)}</div>
+                    <div class="button" product-id="${product.id}" name="${product.name}" price="${product.price}">Add to cart</div>
+                </div>`;
         }
-        this.innerHTML =
+        document.querySelector(".catalog").innerHTML =
             `<h2>Catalog</h2>
              <div class="products">${products}</div>`;
     }
-}
-
-customElements.define("product-catalog", ProductCatalog);
-
-
-class ProductDetails extends HTMLElement {
-    connectedCallback() {
-        this.productId = this.getAttribute("product-id");
-        this.name = this.getAttribute("name");
-        this.price = Number(this.getAttribute("price"))
-        this.render();
-        this.registerHandlers();
-    }
-
-    render() {
-        this.innerHTML =
-            `<div class="product">
-                <div class="name">${this.name}</div>
-                <div class="price">${priceFormat.format(this.price)}</div>
-                <div class="button">Add to cart</div>
-            </div>`;
-    }
 
     registerHandlers() {
-        const button = this.querySelector(".button");
-        button.addEventListener("click", () => {
-            document.dispatchEvent(new CustomEvent("addItemToCart", { detail: this }));
+        const buttons = document.querySelector(".catalog").querySelectorAll(".button");
+        buttons.forEach(button => {
+            const product = {id: button.getAttribute("product-id"), name: button.getAttribute("name"), price: Number(button.getAttribute("price"))};
+            button.addEventListener("click", () => {
+                document.dispatchEvent(new CustomEvent("addItemToCart", { detail: product }));
+            });
         });
     }
 }
-
-customElements.define("product-details", ProductDetails);

@@ -1,10 +1,6 @@
-export let priceFormat = new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-});
+import { priceFormat, mapConcatArray } from "./formaters.js";
 
 export class ProductCatalog {
-
     async fetchCatalog() {
         let catalog = [];
         try {
@@ -21,24 +17,22 @@ export class ProductCatalog {
 
     async render() {
         this.catalog = await this.fetchCatalog();
-        let products = "";
-        for (let product of this.catalog) {
-            products +=
+
+        document.querySelector(".catalog").innerHTML =
+            `<h2>Catalog</h2>
+             <div class="products">${mapConcatArray(this.catalog, product =>
                 `<div class="product">
                     <div class="name">${product.name}</div>
                     <div class="price">${priceFormat.format(product.price)}</div>
                     <div class="button" product-id="${product.id}" name="${product.name}" price="${product.price}">Add to cart</div>
-                </div>`;
-        }
-        document.querySelector(".catalog").innerHTML =
-            `<h2>Catalog</h2>
-             <div class="products">${products}</div>`;
+                </div>`)}
+            </div>`;
     }
 
     registerHandlers() {
         const buttons = document.querySelector(".catalog").querySelectorAll(".button");
         buttons.forEach(button => {
-            const product = {id: button.getAttribute("product-id"), name: button.getAttribute("name"), price: Number(button.getAttribute("price"))};
+            const product = { id: button.getAttribute("product-id"), name: button.getAttribute("name"), price: Number(button.getAttribute("price")) };
             button.addEventListener("click", () => {
                 document.dispatchEvent(new CustomEvent("addItemToCart", { detail: product }));
             });

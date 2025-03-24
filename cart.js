@@ -30,7 +30,7 @@ class ShoppingCart extends HTMLElement {
 
         this.innerHTML =
             `<h2>Shopping Cart</h2>
-             <div class="cart">
+             <div class="cart-lines">
              ${cartLines}`+(cartLines ? `<hr>` : "")+`
              <div>${this.itemsCount} item(s) for a total amount of ${priceFormat.format(this.totalAmount)}.</div>
              </div>`;

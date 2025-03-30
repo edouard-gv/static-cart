@@ -26,20 +26,12 @@ body {
     margin-bottom: 10px;
 }
 
-.cart .cart-lines {
-    margin-top: 20px;
-    padding: 10px;
-    border: 1px solid #ddd;
-    background-color: #f1f1f1;
-    display: block;
-}
-
 .catalog .button {
     display: inline-block;
     border: none;
     padding: 5px 12px;
     margin: 4px 2px;
-    background-color: #4CAF50; /* Green */
+    background-color: #4CAF50;
     color: white;
     font-size: 14px;
     text-align: center;
@@ -47,3 +39,56 @@ body {
     cursor: pointer;
 }
 
+.cart {
+    max-width: 400px;
+    background: #fff;
+    padding: 20px;    
+}
+
+.cart {
+
+    & .cart-lines {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    & .cart-line {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px;
+        border-radius: 5px;
+        background: #f9f9f9;
+        font-size: 16px;
+    }
+
+    & .totalQuantity {
+        font-weight: bold;
+        background: #0073e6;
+        color: white;
+        padding: 4px 8px;
+        border-radius: 5px;
+    }
+
+    & .name {
+        font-weight: bold;
+        margin-left: 10px;
+    }
+
+    & .price {
+        font-style: italic;
+        color: #0073e6;
+    }
+
+    & .totalAmount {
+        font-weight: bold;
+        color: #333;
+    }
+
+    & hr {
+        margin: 15px 0;
+        border: none;
+        border-top: 1px solid #ddd;
+    }
+}

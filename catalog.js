@@ -1,17 +1,14 @@
-import { priceFormat, mapConcatArray } from "./formaters.js";
+import { priceFormat, mapConcatMap } from "./formaters.js";
 
 export class ProductCatalog {
     async fetchCatalog() {
-        let catalog = [];
-        try {
-            const response = await fetch("catalog-data.json");
-            if (!response.ok) {
-                throw new Error(`Response status: ${response.status}`);
-            }
-            catalog = (JSON.parse((await response.text())))["catalog"];
-        } catch (error) {
-            console.error(error.message);
+        let catalog = {};
+        const response = await fetch("catalog-data.json");
+        if (!response.ok) {
+            throw new Error(`Response status: ${response.status}`);
         }
+        (JSON.parse(await response.text()))["catalog"]
+            .forEach(product => catalog[product.id] = product)
         return catalog;
     }
 
@@ -20,7 +17,7 @@ export class ProductCatalog {
 
         document.querySelector(".catalog").innerHTML =
             `<h2>Catalog</h2>
-             <ul class="products">${mapConcatArray(this.catalog, product =>
+             <ul class="products">${mapConcatMap(this.catalog, product =>
                 `<li class="product">
                     <div class="designation">${product.designation}</div>
                     <div class="price">${priceFormat.format(product.price)}</div>

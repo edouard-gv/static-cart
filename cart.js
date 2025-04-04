@@ -21,16 +21,20 @@ export class ShoppingCart {
 
     render() {
         document.querySelector(".cart").innerHTML =
-            `<h2>Shopping Cart</h2>`+ (this.itemsCount > 0 ? `
-             <ul class="cart-lines">
+            `<h2>Shopping Cart</h2>`
+            + (this.itemsCount > 0 ? `
+             <div class="cart-lines">
+             <div class="cart-headline quantity">Quantity</div>
+             <div class="cart-headline designation">Designation</div>
+             <div class="cart-headline price">Unit Price</div>
+             <div class="cart-headline total-amount">Total Price</div>
              ${mapConcatMap(this.cartLines, cartLine =>
-                `<li class="cart-line">
-                    <span class="totalQuantity">${cartLine.quantity}</span>
-                    <span class="name">${cartLine.product.name}(s)</span>
-                    <span class="price">${priceFormat.format(cartLine.product.price)}</span>
-                    <span class="totalAmount">${priceFormat.format(cartLine.totalAmount)}</span>
-                </li>`)}
-             </ul>
+                `<div class="quantity">${cartLine.quantity}</div>
+                <div class="designation">${cartLine.product.designation}</div>
+                <div class="price">${priceFormat.format(cartLine.product.price)}</div>
+                <div class="total-amount">${priceFormat.format(cartLine.totalAmount)}</div>
+                `)}
+             </div>
              <hr>` : "") + `
             <div class="cart-summary">
                 ${this.itemsCount} item(s) for a total amount of ${priceFormat.format(this.totalAmount)}.</div>

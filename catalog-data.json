@@ -1,5 +1,5 @@
 { "catalog" : [
-    { "id": 1, "name": "Apple", "price": 1.2 },
-    { "id": 2, "name": "Pear", "price": 1.4 },
-    { "id": 3, "name": "Banana", "price": 0.8 }
+    { "id": 1, "designation": "Apple", "price": 1.2 },
+    { "id": 2, "designation": "Pear", "price": 1.4 },
+    { "id": 3, "designation": "Banana", "price": 0.8 }
 ]}

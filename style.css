@@ -2,10 +2,15 @@ body {
     font-family: Arial, sans-serif;
 }
 
+.catalog {
+    padding: 20px;
+}
+
 .catalog .products {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
+    padding-left:0px;
 }
 
 .product {
@@ -14,9 +19,10 @@ body {
     width: 150px;
     text-align: center;
     background-color: #f9f9f9;
+    list-style-type: none;
 }
 
-.product .name {
+.product .designation {
     font-weight: bold;
     margin-bottom: 5px;
 }
@@ -31,7 +37,7 @@ body {
     border: none;
     padding: 5px 12px;
     margin: 4px 2px;
-    background-color: #4CAF50;
+    background-color: #333;
     color: white;
     font-size: 14px;
     text-align: center;
@@ -40,55 +46,43 @@ body {
 }
 
 .cart {
-    max-width: 400px;
     background: #fff;
-    padding: 20px;    
+    padding: 20px;
 }
 
 .cart {
 
     & .cart-lines {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
+        display: grid;
+        grid-template-columns: 60px 1fr 100px 100px;
+        grid-template-rows: auto;
+        column-gap: 20px;
+        row-gap: 10px;
     }
 
-    & .cart-line {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 10px;
-        border-radius: 5px;
-        background: #f9f9f9;
-        font-size: 16px;
+    & .cart-summary {
+        grid-column: span 4;
     }
 
-    & .totalQuantity {
+    & .quantity {
         font-weight: bold;
-        background: #0073e6;
-        color: white;
-        padding: 4px 8px;
-        border-radius: 5px;
-    }
-
-    & .name {
-        font-weight: bold;
-        margin-left: 10px;
+        text-align: end;
     }
 
     & .price {
         font-style: italic;
-        color: #0073e6;
+        text-align: end;
     }
 
-    & .totalAmount {
+    & .total-amount {
         font-weight: bold;
-        color: #333;
+        text-align: end;
     }
 
     & hr {
         margin: 15px 0;
         border: none;
         border-top: 1px solid #ddd;
+        grid-column: span 4;
     }
 }

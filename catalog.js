@@ -20,19 +20,19 @@ export class ProductCatalog {
 
         document.querySelector(".catalog").innerHTML =
             `<h2>Catalog</h2>
-             <div class="products">${mapConcatArray(this.catalog, product =>
-                `<div class="product">
-                    <div class="name">${product.name}</div>
+             <ul class="products">${mapConcatArray(this.catalog, product =>
+                `<li class="product">
+                    <div class="designation">${product.designation}</div>
                     <div class="price">${priceFormat.format(product.price)}</div>
-                    <div class="button" product-id="${product.id}" name="${product.name}" price="${product.price}">Add to cart</div>
-                </div>`)}
-            </div>`;
+                    <div class="button" product-id="${product.id}" designation="${product.designation}" price="${product.price}">Add to cart</div>
+                </li>`)}
+            </ul>`;
     }
 
     registerHandlers() {
         const buttons = document.querySelector(".catalog").querySelectorAll(".button");
         buttons.forEach(button => {
-            const product = { id: button.getAttribute("product-id"), name: button.getAttribute("name"), price: Number(button.getAttribute("price")) };
+            const product = { id: button.getAttribute("product-id"), designation: button.getAttribute("designation"), price: Number(button.getAttribute("price")) };
             button.addEventListener("click", () => {
                 document.dispatchEvent(new CustomEvent("addItemToCart", { detail: product }));
             });
